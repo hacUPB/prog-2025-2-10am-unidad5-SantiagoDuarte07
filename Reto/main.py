@@ -48,7 +48,8 @@ def txt_contar(ruta):
     sin_esp = 0
     i = 0
     while i < len(t):
-        if not t[i].isspace(): sin_esp += 1
+        if not t[i].isspace(): 
+            sin_esp += 1
         i += 1
     print("\nPalabras:", n_pal)
     print("Caracteres (con espacios):", con_esp)
@@ -79,7 +80,8 @@ def txt_vocales(ruta):
     while k < 5: 
         print(" ", vocales[k], ":", cont[k]); k += 1
     if TIENE_MPL:
-        plt.bar(vocales, cont); plt.title("Vocales"); plt.xlabel("Vocal"); plt.ylabel("Frecuencia"); plt.show()
+        plt.bar(vocales, cont); 
+        plt.title("Vocales"); plt.xlabel("Vocal"); plt.ylabel("Frecuencia"); plt.show()
     else:
         print("(Matplotlib no disponible, no se muestra gráfico)")
 
