@@ -1,20 +1,20 @@
 import os, sys, csv
- 
+
 TIENE_MPL = True
 try:
     import matplotlib.pyplot as plt
 except Exception:
     TIENE_MPL = False
- 
+
 # ---------- Utilidades ----------
-def limpiar():
+def limpiar(): 
     try: os.system("cls" if os.name=="nt" else "clear")
     except: pass
- 
+
 def pausa():
     try: input("\nEnter para continuar...")
     except: pass
- 
+
 def listar_archivos():
     print("\n1) Ruta actual\n2) Especificar ruta")
     op = input("Opción: ").strip()
@@ -23,22 +23,22 @@ def listar_archivos():
         print("\nContenido de:", os.path.abspath(ruta))
         for nombre in os.listdir(ruta): print(" -", nombre)
     except Exception as e: print("Error:", e)
- 
+
 # ---------- TXT ----------
 def leer_txt(ruta):
     try:
         with open(ruta, "r", encoding="utf-8") as f: return f.read()
     except Exception as e:
         print("No se pudo leer:", e); return None
- 
+
 def escribir_txt(ruta, texto):
     try:
         with open(ruta, "w", encoding="utf-8") as f: f.write(texto); return True
     except Exception as e:
         print("No se pudo escribir:", e); return False
- 
+
 def txt_contar(ruta):
-    t = leer_txt(ruta);
+    t = leer_txt(ruta); 
     if t is None: return
     # Palabras
     partes = t.split()
@@ -53,7 +53,7 @@ def txt_contar(ruta):
     print("\nPalabras:", n_pal)
     print("Caracteres (con espacios):", con_esp)
     print("Caracteres (sin espacios):", sin_esp)
- 
+
 def txt_reemplazar(ruta):
     t = leer_txt(ruta)
     if t is None: return
@@ -61,7 +61,7 @@ def txt_reemplazar(ruta):
     b = input("Reemplazar por: ").strip()
     if a=="": print("No puede ser vacía."); return
     if escribir_txt(ruta, t.replace(a, b)): print("Archivo actualizado.")
- 
+
 def txt_vocales(ruta):
     t = leer_txt(ruta)
     if t is None: return
@@ -76,13 +76,13 @@ def txt_vocales(ruta):
         i += 1
     print("\nOcurrencias:")
     k = 0
-    while k < 5:
+    while k < 5: 
         print(" ", vocales[k], ":", cont[k]); k += 1
     if TIENE_MPL:
         plt.bar(vocales, cont); plt.title("Vocales"); plt.xlabel("Vocal"); plt.ylabel("Frecuencia"); plt.show()
     else:
         print("(Matplotlib no disponible, no se muestra gráfico)")
- 
+
 def submenu_txt():
     ruta = input("Ruta del .txt: ").strip()
     while True:
@@ -93,14 +93,14 @@ def submenu_txt():
         elif op=="3": txt_vocales(ruta); pausa()
         elif op=="4": break
         else: print("Opción inválida")
- 
+
 # ---------- CSV ----------
 def abrir_csv(ruta):
     try:
         f = open(ruta, "r", newline="", encoding="utf-8")
         return f, csv.reader(f)
     except Exception as e: print("No se pudo abrir:", e); return None, None
- 
+
 def csv_head(ruta):
     f, r = abrir_csv(ruta)
     if r is None: return
@@ -112,7 +112,7 @@ def csv_head(ruta):
     finally:
         try: f.close()
         except: pass
- 
+
 def leer_todo_csv(ruta):
     f, r = abrir_csv(ruta)
     if r is None: return None
@@ -123,17 +123,17 @@ def leer_todo_csv(ruta):
         try: f.close()
         except: pass
     return data
- 
+
 def idx_col(headers, entrada):
     if entrada.isdigit():
-        i = int(entrada);
+        i = int(entrada); 
         return i if 0 <= i < len(headers) else -1
     i = 0
     while i < len(headers):
         if headers[i] == entrada: return i
         i += 1
     return -1
- 
+
 def col_a_floats(filas, i):
     vals = []; k = 0
     while k < len(filas):
@@ -145,7 +145,7 @@ def col_a_floats(filas, i):
                 except: pass
         k += 1
     return vals
- 
+
 def stats_manuales(vals):
     n = len(vals)
     if n == 0:
@@ -165,13 +165,13 @@ def stats_manuales(vals):
         d = vals[i] - prom; sc += d*d; i += 1
     desv = (sc / n) ** 0.5
     return (n, prom, med, desv, mn, mx)
- 
+
 def csv_stats(ruta):
     datos = leer_todo_csv(ruta)
     if not datos: print("CSV vacío o no válido."); return
     headers = datos[0]; print("\nEncabezados:")
     i = 0
-    while i < len(headers):
+    while i < len(headers): 
         print("  [{}] {}".format(i, headers[i])); i += 1
     sel = input("Nombre o índice de columna: ").strip()
     i = idx_col(headers, sel)
@@ -185,7 +185,7 @@ def csv_stats(ruta):
     print("Desviación estándar (poblacional):", desv)
     print("Mínimo:", mn)
     print("Máximo:", mx)
- 
+
 def csv_graficar(ruta):
     if not TIENE_MPL:
         print("Matplotlib no disponible."); return
@@ -193,12 +193,12 @@ def csv_graficar(ruta):
     if not datos: print("CSV vacío o no válido."); return
     headers = datos[0]; print("\nEncabezados:")
     i = 0
-    while i < len(headers):
+    while i < len(headers): 
         print("  [{}] {}".format(i, headers[i])); i += 1
     sel = input("Columna numérica (nombre o índice): ").strip()
     i = idx_col(headers, sel)
     if i==-1: print("Columna no encontrada."); return
- 
+
     xs, ys = [], []
     filas = datos[1:]; idx = 0; k = 0
     while k < len(filas):
@@ -212,11 +212,11 @@ def csv_graficar(ruta):
                 except: pass
         k += 1
     if len(ys)==0: print("No hay datos numéricos válidos."); return
- 
+
     # Dispersión
     plt.figure(); plt.scatter(xs, ys)
     plt.title("Dispersión - {}".format(headers[i])); plt.xlabel("Índice"); plt.ylabel(headers[i]); plt.show()
- 
+
     # Barras: frecuencias por 5 rangos
     mn, mx = min(ys), max(ys); bins = 5
     ancho = (mx - mn) / bins if bins>0 else 1
@@ -239,7 +239,7 @@ def csv_graficar(ruta):
     plt.figure(); plt.bar(etiquetas, cuentas)
     plt.title("Barras por rangos - {}".format(headers[i])); plt.xlabel("Rango"); plt.ylabel("Frecuencia")
     plt.xticks(rotation=45); plt.tight_layout(); plt.show()
- 
+
 def submenu_csv():
     ruta = input("Ruta del .csv: ").strip()
     while True:
@@ -250,7 +250,7 @@ def submenu_csv():
         elif op=="3": csv_graficar(ruta); pausa()
         elif op=="4": break
         else: print("Opción inválida")
- 
+
 # ---------- Menú principal ----------
 def main():
     limpiar(); print("CLI Unidad 5 - Archivos y Visualización\n")
@@ -264,8 +264,8 @@ def main():
         elif op=="3": submenu_csv()
         elif op=="4": print("Adiós"); break
         else: print("Opción inválida")
- 
-if __name__=="main_":
+
+if __name__=="__main__":
     try: main()
     except KeyboardInterrupt:
         print("\nInterrumpido."); sys.exit(0)
